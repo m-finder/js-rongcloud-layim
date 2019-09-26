@@ -12,16 +12,12 @@ layui.extend({
         form = layui.form,
         laytpl = layui.laytpl;
 
-    const json = function (url, data, success, options) {
+    const json = function (options) {
         let that = this, type = typeof data === 'function';
 
-        if (type) {
-            options = success
-            success = data;
-            data = {};
-        }
+        options.data = options.data || {};
+        options.headers = options.headers || {};
 
-        options = options || {};
         return $.ajax($.extend({
             type: 'post'
             , dataType: 'json'
@@ -43,17 +39,25 @@ layui.extend({
 
     const register = function (data) {
         console.log(data)
-        let options = {}, nonce = Math.random().toString().slice(-8),  timestamp = Date.parse( new Date());
-        options.headers['App-Key'] = setter.app_key;
-        options.headers['Nonce'] = nonce;
-        options.headers['Timestamp'] = timestamp;
-        options.headers['Signature'] =   sha1(setter.app_key + nonce + timestamp);
-        console.log(options)
-        return false;
-        json('http://api-cn.ronghub.com/user/getToken.json',data, function (res){
-            console.log(res)
-        }, options);
-        return false;
+        let headers = {}, nonce = Math.random().toString().slice(-8), timestamp = Date.parse(new Date());
+        headers = {
+            'App-Key': setter.app_key,
+            'Nonce': nonce,
+            'Timestamp': timestamp,
+            'Signature': sha1(setter.app_key + nonce + timestamp)
+        };
+        json({
+            type:'post'
+            , url: 'http://api-cn.ronghub.com/user/getToken.json'
+            , data: data
+            , headers: headers
+            , done: function(res){
+                layer.closeAll();
+                layer.msg('操作成功', {icon: 1, time: 1000}, function () {
+                    layui.index.render();
+                });
+            }
+        });
     };
 
     $(function () {
