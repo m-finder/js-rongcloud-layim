@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>M-finder WebIM</title>
+    <link rel="stylesheet" href="./js/layui/css/layui.css">
+    <link href="favicon.ico" type="image/vnd.microsoft.icon" rel="shortcut icon"/>
+</head>
+
+<body data-token="" data-rykey="">
+<script id="user-form" type="text/html">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" placeholder="请输入" value="yf-wu@qq.com" lay-verify="required|email" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="portraitUri"  lay-verify="required|url" value="https://www.m-finder.com/assets/logo.jpeg" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+            </div>
+        </div>
+    </form>
+</script>
+<script src="./js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: './js/',
+        version: '2.0.0'
+    }).use('index');
+</script>
+</body>
+</html>
