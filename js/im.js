@@ -1,19 +1,42 @@
-﻿layui.define(['jquery', 'layer', 'ry_lib', 'layim'], function (exports) {
-    var $ = layui.jquery, lib = layui.ry_lib, layer = layui.layer, layim = layui.layim;
+﻿layui.define(['jquery', 'layer', 'ry_lib', 'layim', 'setter'], function (exports) {
+    const $ = layui.jquery, lib = layui.ry_lib, layer = layui.layer, layim = layui.layim, setter = layui.setter;
 
-    var conf = {
+    let conf = {
         uid: 0, //连接的用户id，必须传
         key: '', //融云key
         token: null,
     };
 
-    var socket = {
+    const socket = {
         config: function (options) {
             conf = $.extend(conf, options); // 把 layim 继承出去，方便在register中使用
             console.log('当前用户配置 ：' + JSON.stringify(options));
             this.register();
             ry.init(options.key);
             ry.connectWithToken(options.token);
+        },
+        getToken: function (data) {
+            let headers = {}, nonce = Math.floor(Math.random() * 1000000), timestamp = new Date().getTime();
+            headers = {
+                'App-Key': setter.app_key,
+                'Nonce': nonce,
+                'Timestamp': timestamp,
+                'Signature': sha1(setter.app_key + nonce + timestamp),
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
+
+            $.ajax({
+                type:'post'
+                , url: 'http://api-cn.ronghub.com/user/getToken.json'
+                , data: data
+                , headers: headers
+                , success: function(res){
+                    layer.closeAll();
+                    layer.msg('操作成功', {icon: 1, time: 1000}, function () {
+                        layui.index.render();
+                    });
+                }
+            });
         },
         register: function () {
             if (layim) {
@@ -122,7 +145,7 @@
         },
     };
 
-    var ry = {
+    const ry = {
         init: function (key) { //初始化融云key
             res = lib.RongIMClient.init(key);
             console.log(res)
