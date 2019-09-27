@@ -2,15 +2,14 @@ layui.extend({
     setter: 'config',
     ry_lib: 'ry_lib',
     im: 'im',
-}).define(['jquery', 'setter', 'ry_lib', 'im', 'layer', 'form', 'laytpl', 'sha1'], function (exports) {
-    let $ = jquery = layui.jquery,
+}).define(['jquery', 'setter', 'ry_lib', 'im', 'layer', 'form',  'sha1'], function (exports) {
+    let $ = layui.jquery,
         setter = layui.setter,
         ry_lib = layui.ry_lib,
         im = layui.im,
         sha1 = layui.sha1,
         layer = layui.layer,
-        form = layui.form,
-        laytpl = layui.laytpl;
+        form = layui.form;
 
 
     $(function () {
