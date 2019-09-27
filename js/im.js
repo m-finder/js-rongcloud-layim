@@ -175,7 +175,7 @@
                 onReceived: function (message) { // 接收到的消息
                     switch (message.messageType) { // 判断消息类型
                         case RongIMClient.MessageType.LAYIM_TEXT_MESSAGE:
-                            conf.layim.getMessage(message.content);
+                            layim.getMessage(message.content);
                             break;
                     }
                 }
