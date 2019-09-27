@@ -156,13 +156,13 @@
                     // status 标识当前连接状态
                     switch (status) {
                         case RongIMLib.ConnectionStatus.CONNECTED:
-                            layer.msg('链接成功');
+                            console.log('链接成功');
                             break;
                         case RongIMLib.ConnectionStatus.CONNECTING:
-                            layer.msg('正在链接');
+                            console.log('正在链接');
                             break;
                         case RongIMLib.ConnectionStatus.DISCONNECTED:
-                            layer.msg('断开连接');
+                            console.log('断开连接');
                             break;
                         case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
                             layer.msg('其他设备登录');
@@ -191,23 +191,23 @@
         connectWithToken: function (token) {    //连接事件
             RongIMClient.connect(token, {
                 onSuccess: function (userId) {
-                    console.log("Login successfully." + userId);
+                    console.log("Login successfully：" + userId);
                 },
                 onTokenIncorrect: function () {
-                    console.log('token无效');
+                    layer.msg('token无效');
                 },
                 onError: function (errorCode) {
-                    console.log('发送失败:' + errorCode);
+                    layer.msg('发送失败:' + errorCode);
                 }
             });
         },
         //融云自定义消息，把消息格式定义为layim的消息类型
         defineMessage: function () {
-            var defineMsg = function (obj) {
+            let defineMsg = function (obj) {
                 RongIMClient.registerMessageType(obj.msgName, obj.objName, obj.msgTag, obj.msgProperties);
-            }
+            };
             //注册普通消息
-            var textMsg = {
+            let textMsg = {
                 msgName: 'LAYIM_TEXT_MESSAGE',
                 objName: 'LAYIM:CHAT',
                 msgTag: new lib.MessageTag(false, false),
@@ -215,10 +215,8 @@
             };
             //注册
             defineMsg(textMsg);
-
         },
-        sendMsg: function (data) {  //根据layim提供的data数据，进行解析
-            console.log(data);
+        sendMsg: function (data) {
             var mine = data.mine;
             var to = data.to;
             var id = mine.id;   //当前用户id
