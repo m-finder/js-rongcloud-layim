@@ -104,13 +104,6 @@
             //监听layim建立就绪
             layim.on('ready', function (res) {
                 layim.msgbox(5);
-                layim.addList({
-                    type: 'group'
-                    , avatar: "static/img/tel.jpg"
-                    , groupname: '海贼世界'
-                    , id: "1"
-                    , members: 0
-                });
                 ry.joinGroup('1', '海贼世界');  //加入融云群组
             });
 
