@@ -20,6 +20,13 @@ layui.extend({
             let that = this
             $.get('./json/' + this.id + '-firends.json', function (res) {
                 let user_info = res.data;
+
+                /*
+                    请求 token，前端请求需 nginx 代理，不安全
+                         location /api/ {
+                            proxy_pass http://api-cn.ronghub.com/;
+                        }
+                */
                 // im.getToken(user_info);
 
                 im.config({
