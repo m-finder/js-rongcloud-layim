@@ -2,41 +2,47 @@ layui.extend({
     setter: 'config',
     ry_lib: 'ry_lib',
     im: 'im',
-}).define(['jquery', 'setter', 'ry_lib', 'im', 'layer', 'form',  'sha1'], function (exports) {
+}).define(['jquery', 'setter', 'ry_lib', 'im', 'layer', 'form'], function (exports) {
     let $ = layui.jquery,
         setter = layui.setter,
         ry_lib = layui.ry_lib,
         im = layui.im,
-        sha1 = layui.sha1,
         layer = layui.layer,
         form = layui.form;
 
-
     $(function () {
-        let user_info = {}
-        form.on('submit(submit)', function (data) {
-            user_info = data.field;
-            user_info.userId = user_info.name;
-            im.getToken(user_info);
-            return false;
-        });
+        const changeStatus = function (that) {
+            that.text('已登录');
+            $('.login-btn').addClass('layui-btn-disabled');
+            console.log(that.length)
+        };
+        $('.login-btn').click(function () {
+            let that = this
+            $.get('./json/' + this.id + '-firends.json', function (res) {
+                let user_info = res.data;
+                // im.getToken(user_info);
 
+                im.config({
+                    key: setter.app_key,
+                    token: res.data.mine.token,
+                    user: res.data
+                });
+
+                layui.data('im', {key: 'userInfo', value: user_info});
+                changeStatus($(that))
+            })
+        });
         let local_data = layui.data('im');
-        if (local_data === '{}' || local_data.token === undefined) {
-            layer.open({
-                type: 1
-                , area: ['500px', '300px']
-                , closeBtn: 0
-                , title: '输入用户信息'
-                , skin: 'layui-layer-prompt'
-                , shade: 0.6
-                , anim: 1
-                , content: $('#user-form').html()
-                , success(layero, index) {
-                    form.render()
-                }
-            });
+        if (local_data === '{}' || local_data.userInfo === undefined) {
+           layer.msg('请选择一个用户登录');
             return false;
+        } else {
+            im.config({
+                key: setter.app_key,
+                token: local_data.userInfo.mine.token,
+                user: local_data.userInfo
+            });
+            changeStatus($('#' + (local_data.userInfo.mine.username).toLowerCase()))
         }
     });
 

@@ -1,0 +1,42 @@
+{
+  "code": 0,
+  "msg": "",
+  "data": {
+    "mine": {
+      "username": "Buggy",
+      "id": "100003",
+      "status": "online",
+      "sign": "巴基速递，下单即日达！",
+      "avatar": "https://www.m-finder.com/im/img/buggy.jpg",
+      "token": "oKTkaFPv0h2Vxi7jpUxhr9b9GMLLZirZN1jqXo7OxP4qByC9whgnnAa/drw+/uVKMVC7QS829MZbNsfRPMz6cQ=="
+    },
+    "friend": [
+      {
+        "groupname": "我的好友",
+        "id": 1,
+        "online": 2,
+        "list": [
+          {
+            "username": "Shanks",
+            "id": "100002",
+            "avatar": "https://www.m-finder.com/im/img/shanks.jpg",
+            "sign": "给我个面子如何?"
+          },
+          {
+            "username": "Buggy",
+            "id": "100003",
+            "avatar": "https://www.m-finder.com/im/img/buggy.jpg",
+            "sign": "buggy deliver"
+          }
+        ]
+      }
+    ],
+    "group": [
+      {
+        "groupname": "海贼世界",
+        "id": "1",
+        "avatar": "https://www.m-finder.com/im/img/box.jpg"
+      }
+    ]
+  }
+}

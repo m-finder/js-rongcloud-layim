@@ -1,0 +1,24 @@
+body{
+    background-color: #f2f2f2;
+    padding: 45px;
+    overflow: hidden;
+}
+.user-box{
+    text-align: center;
+    padding: 20px;
+}
+.user-name{
+    margin: 25px auto;
+    font-weight: 600;
+    color: #2b425b;
+    font-size: 1.2em;
+}
+.user-sign{
+    color: #afb9c3;
+}
+.user-avatar{
+    box-shadow: 0 0 0 4px rgba(0,0,0,.1);
+    border-radius: 50%;
+    width: 96px;
+    height: 96px;
+}
