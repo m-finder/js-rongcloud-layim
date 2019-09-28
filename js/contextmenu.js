@@ -61,10 +61,11 @@ layui.define(['layer', 'element'], function (exports) {
             $(document).off('mousedown', menu.hide).on('mousedown', menu.hide);
         },
         menuChildrenClick: function (options) {
-            $(document).on("click", ".ui-context-menu-item", function () {
+            $(document).off('click').on("click", ".ui-context-menu-item", function () {
                 let i = $(this).index();
                 layer.closeAll('tips');
-                options.menu[i].callback && options.menu[i].callback($(this));
+                options.menu[i].callback && "function" == typeof options.menu[i].callback && options.menu[i].callback($(this));
+                stope(options.menu[i].callback);
             });
         }
     };
