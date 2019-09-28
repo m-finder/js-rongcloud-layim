@@ -227,7 +227,7 @@
                 // im.joinGroup('1', '海贼世界');  //加入融云群组
                 menu.init([
                     {
-                        target: $('.layim-list-friend'),
+                        target: '.layim-list-friend',
                         menu: [{
                             text: "新增分组",
                             callback: function (target) {
@@ -236,7 +236,7 @@
                         }]
                     },
                     {
-                        target: $('.layim-list-friend>li'),
+                        target: '.layim-list-friend >li>h5>span',
                         menu: [{
                             text: "重命名",
                             callback: function (target) {

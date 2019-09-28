@@ -7,7 +7,7 @@ layui.define(['layer', 'element'], function (exports) {
         , stope = layui.stope;
 
 
-    let defaults = {
+    let defaults = [{
         menu: [{
             text: "菜单一",
             callback: function (t) {
@@ -18,15 +18,13 @@ layui.define(['layer', 'element'], function (exports) {
             }
         }],
         target: $('.layim-list-friend')
-    };
+    }];
 
     const menu = {
         init: function (options) {
-            // defaults = $.extend(defaults, options);
-            // this.menuClick(defaults);
-            layui.each(options, function (index, item){
-                defaults = $.extend(defaults, item);
-                menu.menuClick(defaults);
+            defaults = $.extend(defaults, options);
+            layui.each(defaults, function (index, item){
+                menu.menuClick(item);
             })
         },
         hide: function () {
@@ -36,7 +34,6 @@ layui.define(['layer', 'element'], function (exports) {
             let target = options.target;
 
             $(target).on('contextmenu', function (event) {
-                console.log(event.target);
                 if (event.target != this) return false;
 
                 let lis = '';
@@ -46,13 +43,13 @@ layui.define(['layer', 'element'], function (exports) {
 
                 let html = '<ul id="contextmenu">' + lis + '</ul>';
                 layer.tips(html, target, {
-                    tips: 4,
+                    tips: 1,
                     time: 0,
                     anim: 5,
                     fixed: true,
                     skin: "layui-box layui-layim-contextmenu",
                     success: function (layero, index) {
-                        menu.menuChildrenClick();
+                        menu.menuChildrenClick(options);
                         const stopEvent = function (event) {
                             stope(event);
                         };
@@ -63,11 +60,11 @@ layui.define(['layer', 'element'], function (exports) {
 
             $(document).off('mousedown', menu.hide).on('mousedown', menu.hide);
         },
-        menuChildrenClick: function () {
+        menuChildrenClick: function (options) {
             $(document).on("click", ".ui-context-menu-item", function () {
                 let i = $(this).index();
                 layer.closeAll('tips');
-                defaults.menu[i].callback && defaults.menu[i].callback($(this));
+                options.menu[i].callback && options.menu[i].callback($(this));
             });
         }
     };

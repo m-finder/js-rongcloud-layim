@@ -14,6 +14,7 @@ layui.extend({
     $(function () {
         $('.login-btn').click(function () {
             let that = this;
+            $('.login-btn').addClass('layui-btn-disabled');
             $.get('./json/' + this.id + '-firends.json', function (res) {
                 // 请求 token，前端请求需 nginx 代理，不安全
                 // https://support.rongcloud.cn/kb/NDU0
