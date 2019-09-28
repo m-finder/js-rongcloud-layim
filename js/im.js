@@ -225,35 +225,31 @@
             layim.on('ready', function (res) {
                 layim.msgbox(5);
                 // im.joinGroup('1', '海贼世界');  //加入融云群组
-                menu.init({
-                    target: $('.layim-list-friend'),
-                    menu: [{
-                        text: "新增",
-                        callback: function (target, ele) {
-                            console.log(target);
-                            layer.msg(ele.find('span').text());
-                        }
-                    }, {
-                        text: "复制",
-                        callback: function (target, ele) {
-                            console.log(target);
-                            layer.msg(ele.find('span').text());
-                        }
-                    }, {
-                        text: "粘贴",
-                        callback: function (target, ele) {
-                            console.log(target);
-                            layer.msg(ele.find('span').text());
-                        }
-                    }, {
-                        text: "删除",
-                        callback: function (target, ele) {
-                            console.log(target);
-                            layer.msg(ele.find('span').text());
-                        }
+                menu.init([
+                    {
+                        target: $('ul .layim-list-friend'),
+                        menu: [{
+                            text: "新增分组",
+                            callback: function (target) {
+                                layer.msg(target.find('span').text());
+                            }
+                        }]
+                    },
+                    {
+                        target: $('.layim-list-friend li'),
+                        menu: [{
+                            text: "重命名",
+                            callback: function (target) {
+                                layer.msg(target.find('span').text());
+                            }
+                        }, {
+                            text: "删除分组",
+                            callback: function (target) {
+                                layer.msg(target.find('span').text());
+                            }
+                        }]
                     }
-                    ]
-                });
+                ]);
             });
 
             //监听查看群员
