@@ -54,10 +54,10 @@
         },
         init: function (key) {
             lib.RongIMClient.init(key);
-            this.initListener();    //初始化事件监听
+            this.initListener();    //初始化连接状态监听
             this.defineMessage();   //初始化自定义消息类型
         },
-        initListener: function () { //初始化监听
+        initListener: function () { //连接状态监听器
             console.log('注册服务连接监听事件');
             RongIMClient.setConnectionStatusListener({
                 onChanged: function (status) {
@@ -85,7 +85,6 @@
                 }
             });
 
-
             RongIMClient.setOnReceiveMessageListener({
                 onReceived: function (message) { // 接收到的消息
                     switch (message.messageType) { // 判断消息类型
@@ -99,16 +98,32 @@
         connectWithToken: function (token) {    //连接事件
             RongIMClient.connect(token, {
                 onSuccess: function (userId) {
+                    console.log('Connect successfully. ' + userId);
                     im.initLayIm(userId); // 融云登录成功，初始化layim
                     $('#' + userId).text('已登录').addClass('layui-btn-disabled');
                     $('.login-btn').addClass('layui-btn-disabled');
                     layer.closeAll()
                 },
-                onTokenIncorrect: function (userId) {
+                onTokenIncorrect: function () {
                     layer.msg('token无效');
                 },
                 onError: function (errorCode) {
-                    layer.msg('发送失败:' + errorCode);
+                    let info = '';
+                    switch (errorCode) {
+                        case RongIMLib.ErrorCode.TIMEOUT:
+                            info = '超时';
+                            break;
+                        case RongIMLib.ConnectionState.UNACCEPTABLE_PAROTOCOL_VERSION:
+                            info = '不可接受的协议版本';
+                            break;
+                        case RongIMLib.ConnectionState.IDENTIFIER_REJECTED:
+                            info = 'appkey不正确';
+                            break;
+                        case RongIMLib.ConnectionState.SERVER_UNAVAILABLE:
+                            info = '服务器不可用';
+                            break;
+                    }
+                    layer.msg(info)
                 }
             });
         },
@@ -118,14 +133,14 @@
                 RongIMClient.registerMessageType(obj.msgName, obj.objName, obj.msgTag, obj.msgProperties);
             };
             //注册普通消息
-            let textMsg = {
+            let message = {
                 msgName: 'LAYIM_TEXT_MESSAGE',
                 objName: 'LAYIM:CHAT',
                 msgTag: new lib.MessageTag(false, false),
                 msgProperties: ["username", "avatar", "id", "type", "content"]
             };
             //注册
-            defineMsg(textMsg);
+            defineMsg(message);
         },
         sendMsg: function (data) {
             let mine = data.mine, to = data.to, id = mine.id, group = to.type == 'group';
@@ -144,7 +159,6 @@
             let conversationType = group ? lib.ConversationType.GROUP : lib.ConversationType.PRIVATE; //私聊,其他会话选择相应的消息类型即可。
             let targetId = to.id.toString();        //这里的targetId必须是string类型，否则会报错
             //构造消息体，这里就是我们刚才已经注册过的自定义消息
-            console.log(msg);
             let detail = new RongIMClient.RegisterMessage.LAYIM_TEXT_MESSAGE(msg);
             //发送消息
             RongIMClient.getInstance().sendMessage(conversationType, targetId, detail, {
@@ -152,7 +166,28 @@
                     console.log('发送消息成功');
                 },
                 onError: function (errorCode, message) {
-                    console.log('发送失败:' + errorCode);
+                    let info = '';
+                    switch (errorCode) {
+                        case RongIMLib.ErrorCode.TIMEOUT:
+                            info = '超时';
+                            break;
+                        case RongIMLib.ErrorCode.UNKNOWN:
+                            info = '未知错误';
+                            break;
+                        case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+                            info = '在黑名单中，无法向对方发送消息';
+                            break;
+                        case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+                            info = '不在讨论组中';
+                            break;
+                        case RongIMLib.ErrorCode.NOT_IN_GROUP:
+                            info = '不在群组中';
+                            break;
+                        case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+                            info = '不在聊天室中';
+                            break;
+                    }
+                    layer.msg('发送失败: ' + info + errorCode);
                 }
             });
         },
@@ -179,15 +214,13 @@
                     , type: 'get' //默认get，一般可不填
                     , data: {} //额外参数
                 }
-                //上传图片接口（返回的数据格式见下文），若不开启图片上传，剔除该项即可
                 , uploadImage: {
-                    url: '' //接口地址
-                    , type: 'post' //默认post
+                    url: './json/image.json'
+                    , type: 'get'
                 }
-                //上传文件接口（返回的数据格式见下文），若不开启文件上传，剔除该项即可
                 , uploadFile: {
-                    url: '' //接口地址
-                    , type: 'post' //默认post
+                    url: './json/file.json'
+                    , type: 'get'
                 }
                 //扩展工具栏，下文会做进一步介绍（如果无需扩展，剔除该项即可）
                 , tool: [{
@@ -221,6 +254,7 @@
                     insert('[pre class=layui-code]' + text + '[/pre]');
                 });
             });
+
             //监听layim建立就绪 init直接赋值mine、friend的情况下（只有设置了url才会执行 ready 事件）
             layim.on('ready', function (res) {
                 layim.msgbox(5);
@@ -275,7 +309,6 @@
                 }
             });
             layim.on('sendMessage', function (data) { //监听发送消息
-                console.log(data);
                 im.sendMsg(data);
             });
         },

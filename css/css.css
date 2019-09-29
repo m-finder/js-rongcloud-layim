@@ -22,3 +22,7 @@ body{
     width: 96px;
     height: 96px;
 }
+
+.layim-chat-text img{
+    max-height: 200px;
+}
