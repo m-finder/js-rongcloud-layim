@@ -1,0 +1,55 @@
+{
+    "code": 0,
+    "pages": 1,
+    "data": [
+        {
+            "id": 3,
+            "content": "申请添加你为好友",
+            "uid": 100001,
+            "from": 100004,
+            "from_group": 0,
+            "type": 1,
+            "remark": "我才不是路痴！",
+            "href": null,
+            "read": 1,
+            "time": "刚刚",
+            "user": {
+                "id": 100004,
+                "avatar": "../img/zoro.gif",
+                "username": "Zoro",
+                "sign": "酒！",
+                "token": "MYdeBECBh5rp+EP3dUTsCcNQbPUQJUsLeXRzNI6iEYKpOtcAkUqk1n1pwhjv4Xsa4h1aTaW1Bsg/9XcXghD7TQ=="
+            }
+        },
+        {
+            "id": 2,
+            "content": "海贼世界 聊天室已经自动加入",
+            "uid": 100001,
+            "from": null,
+            "from_group": null,
+            "type": 1,
+            "remark": null,
+            "href": null,
+            "read": 1,
+            "time": "100天前",
+            "user": {
+                "id": null
+            }
+        },
+        {
+            "id": 1,
+            "content": "Shanks 已经同意你的好友申请",
+            "uid": 100001,
+            "from": null,
+            "from_group": null,
+            "type": 1,
+            "remark": null,
+            "href": null,
+            "read": 1,
+            "time": "10年前",
+            "user": {
+                "id": null
+            }
+        }
+    ]
+}

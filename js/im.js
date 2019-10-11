@@ -42,7 +42,7 @@
                         key: setter.app_key,
                         token: res.token,
                         user: data
-                    })
+                    });
                     layer.msg('登录成功', {icon: 1, time: 1000});
                 }
             });
@@ -51,6 +51,7 @@
             conf = $.extend(conf, options);
             im.init(options.key);
             im.connectWithToken(options.token);
+            // im.sendMsg()
         },
         init: function (key) {
             lib.RongIMClient.init(key);
@@ -91,6 +92,11 @@
                         case RongIMClient.MessageType.LAYIM_TEXT_MESSAGE:
                             layim.getMessage(message.content);
                             break;
+                        case RongIMClient.MessageType.LAYIM_TEXT_NOTICE:
+                            layim.getMessage(message.content);
+                            break;
+                        default:
+                            console.log(message)
                     }
                 }
             });
@@ -98,8 +104,8 @@
         connectWithToken: function (token) {    //连接事件
             RongIMClient.connect(token, {
                 onSuccess: function (userId) {
-                    console.log('Connect successfully. ' + userId);
-                    im.initLayIm(userId); // 融云登录成功，初始化layim
+                    console.log('融云登录成功，初始化layim， userid：' + userId);
+                    im.initLayIm(userId);
                     $('#' + userId).text('已登录').addClass('layui-btn-disabled');
                     $('.login-btn').addClass('layui-btn-disabled');
                     layer.closeAll()
@@ -139,30 +145,21 @@
                 msgTag: new lib.MessageTag(false, false),
                 msgProperties: ["username", "avatar", "id", "type", "content"]
             };
+            let notice = {
+                msgName: 'LAYIM_TEXT_NOTICE',
+                objName: 'RC:InfoNtf',
+                msgTag: new lib.MessageTag(false, false),
+                msgProperties: ["username", "avatar", "id", "type", "content"]
+            }
             //注册
             defineMsg(message);
+            defineMsg(notice);
         },
-        sendMsg: function (data) {
-            let mine = data.mine, to = data.to, id = mine.id, group = to.type == 'group';
-            if (group) {
-                id = to.id;     //如果是group类型，id 就是当前 groupid，切记不可写成 mine.id 否则会出现一些问题。
-            }
-            //构造消息
-            var msg = {
-                username: mine.username
-                , avatar: mine.avatar
-                , id: id
-                , type: to.type
-                , content: mine.content
-            };
-            //这里要判断消息类型
-            let conversationType = group ? lib.ConversationType.GROUP : lib.ConversationType.PRIVATE; //私聊,其他会话选择相应的消息类型即可。
-            let targetId = to.id.toString();        //这里的targetId必须是string类型，否则会报错
-            //构造消息体，这里就是我们刚才已经注册过的自定义消息
-            let detail = new RongIMClient.RegisterMessage.LAYIM_TEXT_MESSAGE(msg);
+        send: function(conversationType, targetId, detail){
             //发送消息
             RongIMClient.getInstance().sendMessage(conversationType, targetId, detail, {
                 onSuccess: function (message) {
+                    console.log(message)
                     console.log('发送消息成功');
                 },
                 onError: function (errorCode, message) {
@@ -191,14 +188,63 @@
                 }
             });
         },
-        joinGroup: function (gid, groupName) {
-            let groupId = (gid || '0').toString();  // 群 Id 。
-            RongIMClient.getInstance().joinGroup(groupId, groupName, {
-                onSuccess: function () {
-                    console.log('加入群成功');
+        sendMsg: function (data) {
+            let mine = data.mine, to = data.to, id = mine.id;
+            if (to.type == 'group') {
+                id = to.id;
+            }
+            //构造消息
+            let msg = {
+                username: mine.username
+                , avatar: mine.avatar
+                , id: id
+                , type: to.type
+                , content: mine.content
+            };
+            // 这里要判断消息类型  私聊,其他会话选择相应的消息类型即可。
+            let conversationType = lib.ConversationType.PRIVATE;
+            switch (to.type) {
+                case 'group':
+                    conversationType = lib.ConversationType.CHATROOM;
+                    break;
+            }
+            let targetId = to.id.toString();
+            let detail = new RongIMClient.RegisterMessage.LAYIM_TEXT_MESSAGE(msg);
+            //发送消息
+            im.send(conversationType, targetId, detail);
+        },
+        sendNotice: function (data) {
+            let mine = data.mine, to = data.to, id = mine.id;
+            if (to.type == 'group') {
+                id = to.id;
+            }
+            //构造消息
+            let msg = {
+                username: mine.username
+                , avatar: mine.avatar
+                , id: id
+                , type: to.type
+                , content: mine.content
+            };
+            // 这里要判断消息类型  私聊,其他会话选择相应的消息类型即可。
+            let conversationType = lib.ConversationType.PRIVATE;
+            switch (to.type) {
+                case 'group':
+                    conversationType = lib.ConversationType.CHATROOM;
+                    break;
+            }
+            let targetId = to.id.toString();
+            let detail = new RongIMClient.RegisterMessage.LAYIM_TEXT_NOTICE(msg);
+            im.send(conversationType, targetId, detail);
+        },
+        joinChatRoom: function (chatRoomId, count=10) {
+            let cid = (chatRoomId || '0').toString();  // 群 Id 。
+            RongIMClient.getInstance().joinChatRoom(cid, count, {
+                onSuccess: function() {
+                    console.log('加入聊天室成功');
                 },
-                onError: function (error) {
-                    console.log(error);
+                onError: function(error) {
+                    console.log('加入聊天室失败');
                 }
             });
         },
@@ -210,9 +256,9 @@
                     , data: {}
                 }
                 , members: {
-                    url: '' //接口地址（返回的数据格式见下文）
-                    , type: 'get' //默认get，一般可不填
-                    , data: {} //额外参数
+                    url: './json/getMembers.json'
+                    , type: 'get'
+                    , data: {}
                 }
                 , uploadImage: {
                     url: './json/image.json'
@@ -222,13 +268,12 @@
                     url: './json/file.json'
                     , type: 'get'
                 }
-                //扩展工具栏，下文会做进一步介绍（如果无需扩展，剔除该项即可）
                 , tool: [{
-                    alias: 'code' //工具别名
-                    , title: '代码' //工具名称
-                    , icon: '&#xe64e;' //工具图标，参考图标文档
+                    alias: 'code'
+                    , title: '代码'
+                    , icon: '&#xe64e;'
                 }]
-                , msgbox: './/msgbox.html' //消息盒子页面地址，若不开启，剔除该项即可
+                , msgbox: './msgbox.html'
                 , find: layui.cache.dir + 'css/modules/layim/html/find.html' //发现页面地址，若不开启，剔除该项即可
                 , chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
             });
@@ -257,8 +302,19 @@
 
             //监听layim建立就绪 init直接赋值mine、friend的情况下（只有设置了url才会执行 ready 事件）
             layim.on('ready', function (res) {
-                layim.msgbox(5);
-                // im.joinGroup('1', '海贼世界');  //加入融云群组
+                layim.msgbox(1);
+                im.joinChatRoom(1, 0) // 加入融云聊天室
+                let onlineMessage = {
+                    mine: res.mine,
+                    to: {
+                        system: true //系统消息
+                        ,id: 100002 //聊天窗口ID
+                        ,type: "friend" //聊天窗口类型
+                        ,content: '对方已掉线'
+                    }
+                };
+                im.sendNotice(onlineMessage);
+
                 menu.init([
                     {
                         target: '.layim-list-friend',
@@ -286,29 +342,13 @@
                 ]);
             });
 
-            //监听查看群员
-            layim.on('members', function (data) {
-                console.log('群成员' + data);
-            });
-
             //监听聊天窗口的切换
             layim.on('chatChange', function (res) {
-                var type = res.data.type;
-                console.log(res.data.id)
-                if (type === 'friend') {
-                    //模拟标注好友状态
-                    //layim.setChatStatus('<span style="color:#FF5722;">在线</span>');
-                } else if (type === 'group') {
-                    //模拟系统消息
-//                        layim.getMessage({
-//                            system: true
-//                            , id: res.data.id
-//                            , type: "group"
-//                            , content: '模拟群员' + (Math.random() * 100 | 0) + '加入群聊'
-//                        });
-                }
+                let type = res.data.type;
+                layim.setChatStatus('<span style="color:#999;">' + res.data.sign + '</span>');
             });
-            layim.on('sendMessage', function (data) { //监听发送消息
+
+            layim.on('sendMessage', function (data) {
                 im.sendMsg(data);
             });
         },

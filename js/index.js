@@ -43,7 +43,7 @@ layui.extend({
             im.config({
                 key: setter.app_key,
                 token: local_data.userInfo.token,
-                userId: local_data.userInfo.id
+                userId: local_data.userInfo.userId
             });
         }
 

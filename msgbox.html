@@ -71,14 +71,13 @@
     </style>
 </head>
 <body>
-
-<ul class="layim-msgbox" id="LAY_view"></ul>
-
-<div style="margin: 0 15px;">
+<div style="margin: 15px">
     <blockquote class="layui-elem-quote">
-        注意：这些都是模拟数据，实际使用时，需将其中的模拟接口改为你的项目真实接口。
+        注意：这些都是模拟数据，所以刷新页面后就会重置，实际使用时，需将其中的模拟接口改为你的项目真实接口。
     </blockquote>
 </div>
+
+<ul class="layim-msgbox" id="LAY_view"></ul>
 
 <textarea title="消息模版" id="LAY_tpl" style="display:none;">
 {{# layui.each(d.data, function(index, item){
@@ -126,21 +125,15 @@
 
         //请求消息
         var renderMsg = function (page, callback) {
-
             //实际部署时，请将下述 getmsg.json 改为你的接口地址
-
-            $.get('getmsg.json', {
-                page: page || 1
-            }, function (res) {
+            $.get('./json/getmsg.json', {page: page || 1}, function (res) {
                 if (res.code != 0) {
                     return layer.msg(res.msg);
                 }
-
                 //记录来源用户信息
                 layui.each(res.data, function (index, item) {
                     cache[item.from] = item.user;
                 });
-
                 callback && callback(res.data, res.pages);
             });
         };
