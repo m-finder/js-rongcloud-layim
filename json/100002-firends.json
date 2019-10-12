@@ -7,7 +7,7 @@
       "id": "100002",
       "status": "online",
       "sign": "给我个面子如何？",
-      "avatar": "../img/shanks.jpg",
+      "avatar": "https://www.m-finder.com/im/img/shanks.jpg",
       "token": "zrPTZ8oTq8W6/MXNKuil98NQbPUQJUsLeXRzNI6iEYI63V6Jr9UGl1r2z6n5MQWh4h1aTaW1Bsgo8pVOfXlGqg=="
     },
     "friend": [
@@ -19,14 +19,14 @@
           {
             "username": "Luffy",
             "id": "100001",
-            "avatar": "../img/logo.jpg",
+            "avatar": "https://www.m-finder.com/im/img/logo.jpg",
             "sign": "我想吃肉！！！",
             "status": "offline"
           },
           {
             "username": "Buggy",
             "id": "100003",
-            "avatar": "../img/buggy.jpg",
+            "avatar": "https://www.m-finder.com/im/img/buggy.jpg",
             "sign": "巴基速递，下单即日达！",
             "status": "offline"
           }
@@ -37,7 +37,7 @@
       {
         "groupname": "海贼世界",
         "id": "1",
-        "avatar": "../img/box.jpg",
+        "avatar": "https://www.m-finder.com/im/img/box.jpg",
         "sign": "性感大密宝，在线等撩！"
       }
     ]

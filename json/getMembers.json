@@ -5,7 +5,7 @@
     "owner": {
       "username": "Luffy",
       "id": "100001",
-      "avatar": "../img/logo.jpg",
+      "avatar": "https://www.m-finder.com/im/img/logo.jpg",
       "sign": "我想吃肉！！"
     },
     "members": 4,
@@ -13,25 +13,25 @@
       {
         "username": "Luffy",
         "id": "100001",
-        "avatar": "../img/logo.jpg",
+        "avatar": "https://www.m-finder.com/im/img/logo.jpg",
         "sign": "我想吃肉！！"
       },
       {
         "username": "Shanks",
         "id": "100002",
-        "avatar": "../img/shanks.jpg",
+        "avatar": "https://www.m-finder.com/im/img/shanks.jpg",
         "sign": "给我个面子如何？"
       },
       {
         "username": "Buggy",
         "id": "100003",
-        "avatar": "../img/buggy.jpg",
+        "avatar": "https://www.m-finder.com/im/img/buggy.jpg",
         "sign": "巴基速递，下单即日达！"
       },
       {
         "username": "Zoro",
         "id": "100004",
-        "avatar": "../img/zoro.gif",
+        "avatar": "https://www.m-finder.com/im/img/zoro.gif",
         "sign": "酒！"
       }
     ]

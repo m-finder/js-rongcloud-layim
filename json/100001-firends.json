@@ -19,7 +19,7 @@
           {
             "username": "Shanks",
             "id": "100002",
-            "avatar": "../img/shanks.jpg",
+            "avatar": "https://www.m-finder.com/im/img/shanks.jpg",
             "sign": "给我个面子如何？",
             "status": "offline"
           },
@@ -37,7 +37,7 @@
       {
         "groupname": "海贼世界",
         "id": "1",
-        "avatar": "../img/box.jpg",
+        "avatar": "https://www.m-finder.com/im/img/box.jpg",
         "sign": "性感大密宝，在线等撩！"
       }
     ]
