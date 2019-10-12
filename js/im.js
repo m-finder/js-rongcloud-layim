@@ -93,15 +93,15 @@
                             layim.getMessage(message.content);
                             break;
                         case RongIMClient.MessageType.LAYIM_TEXT_NOTICE:
-                            // layim.getMessage(message.content);
-                            console.log('--------------')
-                            console.log(message.content)
-                            console.log('--------------')
-                            console.log(message.content.category)
-                            console.log(message.content.category == 'online')
-                            if (message.content.category == 'online') {
-                                layim.setFriendStatus(message.content.id, 'online');
-                                console.log(message.content.id, '上线了')
+                            switch (message.content.category) {
+                                case "online":
+                                    layim.setFriendStatus(message.content.id, 'online');
+                                    break;
+                                case "offline":
+                                    layim.setFriendStatus(message.content.id, 'offline');
+                                    break;
+                                default:
+                                    layim.getMessage(message.content);
                             }
                             break;
                         default:
@@ -150,28 +150,27 @@
                 RongIMClient.registerMessageType(obj.msgName, obj.objName, obj.msgTag, obj.msgProperties);
             };
             //注册普通消息
-            let message = {
+            let message = [{
                 msgName: 'LAYIM_TEXT_MESSAGE',
                 objName: 'LAYIM:CHAT',
                 msgTag: new lib.MessageTag(false, false),
                 msgProperties: ["username", "avatar", "id", "type", "content"]
-            };
-
-            let notice = {
+            },{
                 msgName: 'LAYIM_TEXT_NOTICE',
                 objName: 'LAYIM:NOTICE',
                 msgTag: new lib.MessageTag(false, false),
                 msgProperties: ["system", "id", "type", "content", "category"]
-            };
+            }];
+
             //注册
-            defineMsg(message);
-            defineMsg(notice);
+            layui.each(message, function (index,item){
+                defineMsg(item);
+            });
         },
         send: function (conversationType, targetId, detail) {
             //发送消息
             RongIMClient.getInstance().sendMessage(conversationType, targetId, detail, {
                 onSuccess: function (message) {
-                    console.log(message);
                     console.log('发送消息成功');
                 },
                 onError: function (errorCode, message) {
@@ -237,6 +236,26 @@
                 }
             });
         },
+        onlineNotice: function(id, to, type='online'){
+            // 登录后通知好友， 此处应通知后台更新用户在线状态
+            layui.each(to, function (index, item){
+                layui.each(item.list, function (i, t){
+                    let onlineMessage = {
+                        mine: {
+                            content: {
+                                system: true
+                                , id: id
+                                , type: "friend"
+                                , content: '对方已上线'
+                                , category: type
+                            }
+                        },
+                        to: t
+                    };
+                    im.sendMsg(onlineMessage, 'notice');
+                })
+            });
+        },
         initLayIm: function (userId) {
             layim.config({
                 init: {
@@ -272,7 +291,7 @@
                 console.log('在线状态' + data);
             });
 
-            //监听签名修改
+            // 监听签名修改
             layim.on('sign', function (value) {
                 console.log(value);
             });
@@ -293,28 +312,7 @@
             layim.on('ready', function (res) {
                 layim.msgbox(1);
                 im.joinChatRoom(1, 0) // 加入融云聊天室
-                let onlineMessage = {
-                    mine: {
-                        content: {
-                            system: true //系统消息
-                            , id: 100001 //聊天窗口ID
-                            , type: "friend" //聊天窗口类型
-                            , content: '对方已上线'
-                            , category: 'online'
-                        }
-                    },
-                    to: {
-                        avatar: "../img/shanks.jpg",
-                        id: "100002",
-                        name: "Shanks",
-                        sign: "给我个面子如何？",
-                        status: "offline",
-                        type: "friend",
-                        username: "Shanks",
-                    }
-                };
-
-                im.sendMsg(onlineMessage, 'notice');
+                im.onlineNotice(res.mine.id, res.friend);
                 menu.init([
                     {
                         target: '.layim-list-friend',

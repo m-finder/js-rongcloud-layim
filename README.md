@@ -1,84 +1,20 @@
-# WebIM
+# js-rongcloud-layim
 
-PHP + layIM + 融云 版 Web IM
+融云 + layim 单页式 demo
 
-M-finder博客  www.m-finder.com
+因部分功能需要依赖服务端，这里只做简单的演示。
 
-IT行业交流群   295721957
+另外因为 layim 为付费组件，代码已删除 layim.js，请获取授权后自行引入该文件。
 
-本版本只是简单实现了聊天功能，因为版权原因，删除了layim.js，请获取授权后自行引入该文件。
+![demo](./img/demo.png)
 
+演示地址: [ [ 点我 ] ](https://www.m-finder.com/im)
 
-
-## 所用插件：
-
-layIM 3.0.4          本项目中已去除layim.js
-
-融云开源Server SDK    server-sdk-php
-
-
-
-## 体验地址：[ im.m-finder.com ](im.m-finder.com)
-
-## 体验帐号：
-
-用户名：Luffy   密码：admin888 
-
-用户名：Shanks  密码：admin888 
-
-用户名：Buggy   密码：admin888 
-
-
-
-
-## 须知
-开始之前，你要了解layui扩展第三方插件的方法，然后在融云注册帐号并创建应用，最后在融云的server开发指南中下载php版sdk。
-
-## 相关代码
-* layui绑定扩展
-
-```javascript
-layui.config({
-
-    base: 'static/js/'      //第三方扩展路径
-    
-}).extend({
-
-    rmlib: 'rmlib',         //static/js/rmlib.js        对应于融云的http(s)://cdn.ronghub.com/RongIMLib-2.2.5.min.js
-    
-    protobuf: 'protobuf',   //static/js/protobuf.js     对应于融云的http(s)://cdn.ronghub.com/protobuf-2.1.5.min.js
-    
-    socket: 'socket',       //融云的方法和layim的方法封装
-    
-});
-```
-
-* layim,socket初始化
-
-```javascript
-layui.use(['layim', 'jquery', 'socket'], function (layim, socket) {
-
-    var $ = layui.jquery;
-    var socket = layui.socket;
-    var token = $('body').data('token');
-    var rykey = $('body').data('rykey');
-    
-    socket.config({     // socket初始化。
-        key: rykey,
-        token: token,
-        layim: layim,
-    });
-
-    layim.config({
-        init: {
-            url: 'class/doAction.php?action=get_user_data', data: {}
-        },
-        //…… layui基础配置，直接复制官网
-    });  
-}
-```
-
-M-finder
-www.m-finder.com
-
-
+#### 已实现功能
+* ~~获取token~~ (未使用，会泄漏融云密钥)
+* ~~获取好友列表~~（模拟，需要后端实现）
+* ~~获取群成员~~（模拟，需要后端实现）
+* ~~单聊~~
+* ~~群聊~~
+* ~~自定义消息~~
+* ~~好友上线通知~~（模拟，需要后端实现）
